@@ -44,13 +44,6 @@ class Piece6D(dict):
         self.right = "".join([str(p.right) for p in data])
         self.left = "".join([str(p.left) for p in data])
 
-        """self.front = "".join([str(p.front) for p in data[:9]])
-        self.back = "".join([str(p.back) for p in data[-9:]])
-        self.top = "".join([str(p.top) for p in [x for y in [data[i:i + 3] for i in range(0, len(data), 9)] for x in y]])
-        self.bot = "".join([str(p.bot) for p in [x for y in [data[i:i + 3] for i in range(6, len(data), 9)] for x in y]])
-        self.right = "".join([str(p.right) for p in [data[i] for i in range(2, len(data), 3)]])
-        self.left = "".join([str(p.left) for p in [data[i] for i in range(0, len(data), 3)]])"""
-
     def __eq__(self, other):
         for i, d in enumerate(self["data_6D"]):
             if d != other["data_6D"][i]:
@@ -186,16 +179,6 @@ class Grid:
         if col - 1 >= 0:
             neighbors["l"] = [row, col - 1]  # left
         return neighbors
-
-    def get_grid_smooth(self):
-        '''
-        Converts the self.grid into a smoothed version.
-        convert 3x3x3 areas of cubes into 3x3x3 meshes that only include common edges and edges
-        that only touch the outer edges
-        :return:
-        '''
-        pass
-
 
 class Controller:
     def __init__(self, pieces, rows, cols):

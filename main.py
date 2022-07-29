@@ -13,34 +13,7 @@ filename_6D = "data.json"
 filename_3D = "data_3d.json"
 
 
-def get_rotation_indexes():
-    def _old():
-        piece_pos = [
-            # x, y, z  with center of cube at 0,0,0 (forward, right, up are positive)
-            (-1, -1, 1), (0, -1, 1), (1, -1, 1),
-            (-1, -1, 0), (0, -1, 0), (1, -1, 0),
-            (-1, -1, -1), (0, -1, -1), (1, -1, -1),
-
-            (-1, 0, 1), (0, 0, 1), (1, 0, 1),
-            (-1, 0, 0), (0, 0, 0), (1, 0, 0),
-            (-1, 0, -1), (0, 0, -1), (1, 0, -1),
-
-            (-1, 1, 1), (0, 1, 1), (1, 1, 1),
-            (-1, 1, 0), (0, 1, 0), (1, 1, 0),
-            (-1, 1, -1), (0, 1, -1), (1, 1, -1)
-        ]
-        angles = {"right": 90, "left": -90, "back": 180}
-        data = {}
-        for direction, angle in angles.items():
-            sin = math.sin(math.radians(angle))
-            cos = math.cos(math.radians(angle))
-            m_dat = np.array([[cos, -sin, 0], [sin, cos, 0], [0, 0, 1]])
-            data[direction] = [None] * 27
-            for i, point in enumerate(piece_pos):
-                rotated_point = [round(x) for x in (np.asarray(point) @ m_dat).tolist()]
-                data[direction][piece_pos.index(tuple(rotated_point))] = i
-        print(data)
-
+def get_rotation_indexes():  # calculated these out but don't need it to calculate every time it's ran
     return {
         'right': [2, 11, 20, 5, 14, 23, 8, 17, 26, 1, 10, 19, 4, 13, 22, 7, 16, 25, 0, 9, 18, 3, 12, 21, 6, 15, 24],
         'left': [18, 9, 0, 21, 12, 3, 24, 15, 6, 19, 10, 1, 22, 13, 4, 25, 16, 7, 20, 11, 2, 23, 14, 5, 26, 17, 8],
@@ -83,51 +56,6 @@ def get_basic_3D_shapes():
     return pieces_str
 
 
-def create_simple_6d_pieces():
-    d_3d = get_basic_3D_shapes()
-    a_front = [
-        # Front
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Top
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Mid
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Bot
-        # Middle
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Top
-        "flat_bottom", "flat_bottom", "stairs_forward",  # Mid
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Bot
-        # Back
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Top
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Mid
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Bot
-        #    Left                   Mid                  Right
-    ]
-
-    a_back = [
-        # Front
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Top
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Mid
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Bot
-        # Middle
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Top
-        "flat_bottom", "flat_bottom", "stairs_back",  # Mid
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Bot
-        # Back
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Top
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Mid
-        "flat_bottom", "flat_bottom", "flat_bottom",  # Bot
-        #    Left                   Mid                  Right
-    ]
-
-    shapes_6d = []
-    shapes = [a_front, a_back]
-    for shape in shapes:
-        shapes_3d = []
-        color = (rand(0, 255) / 255, rand(0, 255) / 255, rand(0, 255) / 255, 1.0)
-        for sub_shape in shape:
-            shapes_3d.append(Piece3D(sub_shape, d_3d[sub_shape], color))
-        shapes_6d.append(Piece6D(shapes_3d))
-    return shapes_6d
-
-
 def create_simple_3d_pieces():
     # simple 3d shapes
     # random color for each piece
@@ -150,7 +78,7 @@ def create_and_save_6d_objs(size: int, filename: str):
     Attempts to create 6D shapes from using 27 grids each
     containing sizexsize 3x3x3 sections and saves them
     to filename.
-    Shapes usually end up not being very compatible with each-other though.
+    Shapes usually end up NOT being very compatible with each-other though.
     :param size: size of the grid
     :param filename: name of file to save 6D Shapes
     :return: N/A
@@ -233,8 +161,7 @@ def main():
 
     size = 15
     Collapse_Controller = Controller(
-        # pieces=create_simple_6d_pieces(),
-        # pieces = load_3d_pieces()
+        # pieces = load_3d_pieces()  # can switch to this to just run 3D (Visualizer won't do 6D stuff)
         pieces=load_6d_objs(filename_6D),
         rows=size,
         cols=size
@@ -243,9 +170,11 @@ def main():
     v = vis(Collapse_Controller)
     v.run()
 
+
 def test():
     v = vis()
     v.run()
+
 
 if __name__ == "__main__":
     main()

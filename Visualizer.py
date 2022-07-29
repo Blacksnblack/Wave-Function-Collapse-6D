@@ -11,10 +11,10 @@ from direct.directnotify.DirectNotify import DirectNotify
 from direct.gui.DirectGui import *
 
 
-
 def convert_to_vertexes(area: str, row: int, col: int, num_rows: int):
     def get_group(index, max_num=7):
         return index // max_num
+
     verts_group = []
     verts_flat = []
     for i, cube in enumerate(area):
@@ -59,17 +59,6 @@ def create_cube(x, y, z, width=1, height=1, depth=1, colors=None):
     vertex = GeomVertexWriter(vdata, "vertex")
     color = GeomVertexWriter(vdata, 'color')
 
-    """# front
-    vertex.addData3(x, y, z)  # 0 blf
-    vertex.addData3(x + width, y, z)  # 1 brf
-    vertex.addData3(x + width, y, z + height)  # 2 trf
-    vertex.addData3(x, y, z + height)  # 3 tlf
-
-    # back
-    vertex.addData3(x, y + depth, z)  # 4  blb
-    vertex.addData3(x + width, y + depth, z)  # 5 brb
-    vertex.addData3(x + width, y + depth, z + height)  # 6 trb
-    vertex.addData3(x, y + depth, z + height)  # 7 tlb"""
     vertex_data = get_verts_from_pos(x, y, z, width, height, depth)
     for vert in vertex_data:
         vertex.addData3(vert)
@@ -197,9 +186,9 @@ class Visualizer(ShowBase):
         self.plnp = self.render.attachNewNode(plight)
         self.plnp.setPos(mid_x, mid_y, 30)
         self.render.setLight(self.plnp)
-        # self.light_model = self.loader.loadModel('models/misc/sphere')
-        # self.light_model.setScale(0.2, 0.2, 0.2)
-        # self.light_model.reparentTo(self.plnp)
+        """self.light_model = self.loader.loadModel('models/misc/sphere')
+        self.light_model.setScale(0.2, 0.2, 0.2)
+        self.light_model.reparentTo(self.plnp)"""
 
         self.collapser = collapser
         # self.collapser.grid.collapse_random_cell()
@@ -372,7 +361,9 @@ class Visualizer(ShowBase):
                     [cube.addGeom(x) for x in piece_geom]
         self.render.attachNewNode(cube)
 
-    """def visualize_grid(self):
+    """
+    This is here because it's the previous working version of visualizer grid, sorry!
+    def visualize_grid(self):
         def get_pos(g, r, c, x):
             h_pos = c * 3 + (x % 3)
             d_pos = (len(g) * 3) - (r * 3) - (2 - x // 9)
