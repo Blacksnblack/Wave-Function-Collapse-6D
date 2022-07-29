@@ -1,12 +1,7 @@
-import math
-import pprint
-
-import Collapser
 from Collapser import *
 from Visualizer import Visualizer as vis
 # from Visualizer_New import Visualizer as vis
 from random import randint as rand
-import numpy as np
 import json
 
 filename_6D = "data.json"
@@ -168,11 +163,6 @@ def main():
     )
 
     v = vis(Collapse_Controller)
-    v.run()
-
-
-def test():
-    v = vis()
     v.run()
 
 
